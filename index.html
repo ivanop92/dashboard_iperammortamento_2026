@@ -6,11 +6,6 @@
 <title>Simulatore Iperammortamento 2026 | INGENIA S.R.L.</title>
 <meta name="description" content="Calcola il beneficio fiscale dell'Iperammortamento 2026 (L. 199/2025). Simulatore interattivo con piano ammortamento, cumulo ZES/Sabatini e guida normativa completa. A cura di INGENIA S.R.L.">
 
-<meta property="og:title" content="Simulatore Iperammortamento 2026 – Industria 4.0">
-<meta property="og:description" content="Calcola il tuo beneficio fiscale con il nuovo Iperammortamento 2026: fino al 180% di maggiorazione sugli investimenti 4.0. Simulatore gratuito a cura di INGENIA S.R.L.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="it_IT">
-
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
 
 <style>
@@ -108,41 +103,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .total-row td{font-weight:700;background:var(--bg3)}
 .grand-total td{background:var(--grad);color:#fff;font-weight:700;padding:12px 10px}
 
-.section-title{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);margin:32px 0 16px;display:flex;align-items:center;gap:10px}
-.prose{line-height:1.9;color:var(--text2);font-size:14.5px}
-.prose strong{color:var(--text);font-weight:600}
-
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
-.badge-yes{background:#34d39918;color:#34d399}
-.badge-no{background:#f8717118;color:#f87171}
-
 .callout{padding:16px 20px;border-radius:12px;margin:16px 0;font-size:14px;line-height:1.7}
-.callout-blue{background:#5b8ec918;border-left:4px solid var(--brand2);color:var(--brand2)}
-.callout-red{background:#f8717118;border-left:4px solid var(--red);color:var(--red)}
 .callout-gold{background:#fbbf2418;border-left:4px solid var(--accent);color:#f59e0b}
-.callout-brand{background:linear-gradient(135deg,#7c5cbf18,#3bbfa018);border-left:4px solid var(--brand3)}
-
-.timeline-step{display:flex;gap:20px;margin-bottom:28px;position:relative}
-.timeline-dot{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;font-family:var(--serif);color:#fff}
-.timeline-line{position:absolute;left:23px;top:52px;width:2px;height:calc(100% - 24px)}
-
-.check-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;line-height:1.5;color:var(--text2)}
-.check-icon{width:18px;height:18px;border-radius:5px;flex-shrink:0;background:#34d39918;border:1px solid #34d39933;display:flex;align-items:center;justify-content:center;font-size:10px;color:#34d399;margin-top:2px}
-.exclude-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f8717108;border-radius:10px;font-size:13px;color:#f87171;margin-bottom:6px}
-
-.scaglione-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:12px 16px;border-radius:12px;color:#fff}
-.news-card{display:flex;gap:14px;padding:16px 18px;background:var(--bg3);border-radius:12px;border:1px solid var(--border);margin-bottom:12px}
-.news-icon{font-size:24px;flex-shrink:0}
-.news-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
-.news-desc{font-size:13px;line-height:1.6;color:var(--text2)}
-
-.doc-card{background:var(--bg3);border-radius:14px;padding:18px 16px;border:1px solid var(--border)}
-.doc-card .icon{font-size:28px;margin-bottom:8px}
-.doc-card h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
-.doc-card p{font-size:12px;line-height:1.6;color:var(--text2)}
-
-.footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
-.footer-text{font-size:12px;color:var(--text3);line-height:1.7}
 
 .grid-2{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:24px;align-items:start}
 .flex-col{display:flex;flex-direction:column;gap:20px}
@@ -153,6 +115,9 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   .hero h1{font-size:28px}
 }
 
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
+.footer-text{font-size:12px;color:var(--text3);line-height:1.7}
+
 #error-box{
   display:none;
   padding:14px 16px;
@@ -160,31 +125,29 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   border:1px solid rgba(248,113,113,.35);
   background:rgba(248,113,113,.12);
   color:#fecaca;
-  margin:16px 0;
+  margin:16px auto;
+  max-width:1200px;
   font-size:13px;
 }
 </style>
 </head>
 
 <body>
-<div class="container" id="error-box"></div>
+<div id="error-box"></div>
 <div id="root"></div>
 
-<!-- ✅ Caricamento librerie in ordine corretto (IMPORTANTISSIMO) -->
+<!-- React -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 
-<!-- ✅ PropTypes necessario a Recharts UMD (risolve oneOfType undefined) -->
+<!-- Recharts (opzionale) + PropTypes (necessario se Recharts carica) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-
-<!-- ✅ Recharts UMD (ora trova PropTypes) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
 
-<!-- ✅ Babel (solo per debug; poi ti dico come togliere Babel) -->
+<!-- Babel (per JSX) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 
 <script type="text/babel">
-/* --- error handling semplice (così niente schermo nero) --- */
 function showError(msg){
   const box=document.getElementById("error-box");
   box.style.display="block";
@@ -193,12 +156,16 @@ function showError(msg){
 
 try{
   if(!window.React || !window.ReactDOM) throw new Error("React o ReactDOM non caricati (CDN bloccato?).");
-  if(!window.Recharts) throw new Error("Recharts non definito. Verifica che prop-types e recharts siano caricati correttamente.");
 
   const {useState,useMemo}=React;
-  const {BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area}=Recharts;
 
-  /* --- LOGO interno SVG (zero file esterni) --- */
+  // ✅ RECHARTS È OPZIONALE
+  const HAS_RECHARTS = !!window.Recharts;
+  let BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area;
+  if(HAS_RECHARTS){
+    ({BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area} = window.Recharts);
+  }
+
   const BrandMark = () => (
     <div className="brandmark" title="INGENIA S.R.L.">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -289,10 +256,6 @@ try{
 
   const TABS=[
     {id:"calc",label:"Simulatore",icon:"⚡"},
-    {id:"info",label:"Normativa",icon:"📋"},
-    {id:"cumulo",label:"Cumulo",icon:"🔗"},
-    {id:"procedura",label:"Procedura",icon:"📝"},
-    {id:"news",label:"Novità 2026",icon:"📰"}
   ];
 
   function App(){
@@ -318,17 +281,6 @@ try{
       ["Bonus "+al]:Math.round(a.vantIper)
     }));
 
-    const cumD=[
-      R.bonusN>0&&{name:"Iperammortamento",value:Math.round(R.bonusN),color:"#7c5cbf"},
-      R.sabC>0&&{name:"Sabatini",value:Math.round(R.sabC),color:"#3bbfa0"},
-      R.zesC>0&&{name:"ZES Unica",value:Math.round(R.zesC),color:"#fbbf24"}
-    ].filter(Boolean);
-
-    const cumL=aa.map((a,i)=>{
-      const p=R.anni.slice(0,i+1).reduce((s,x)=>s+x.vantIper,0);
-      return{anno:a.anno+"",Cumulato:Math.round(p)};
-    });
-
     return (
       <div>
         <header className="header">
@@ -352,9 +304,9 @@ try{
         <section className="hero">
           <div className="container">
             <h1>Iperammortamento 2026</h1>
-            <p>Simulatore interattivo per il calcolo del beneficio fiscale – Legge n. 199/2025, commi 427–436. Beni Industria 4.0, Transizione Ecologica e Autoproduzione FER.</p>
+            <p>Simulatore interattivo per il calcolo del beneficio fiscale – Legge n. 199/2025, commi 427–436.</p>
             <div className="hero-pills">
-              {[{l:"Orizzonte",v:"01.01.26 – 30.09.28"},{l:"Max",v:tipo==="eco"?"220%":"180%"},{l:"Beneficiari",v:"Reddito d'Impresa"},{l:"Investimento",v:"€ 20M"}]
+              {[{l:"Orizzonte",v:"01.01.26 – 30.09.28"},{l:"Max",v:tipo==="eco"?"220%":"180%"},{l:"Investimento",v:"€ 20M"}]
                 .map((p,i)=><div key={i} className="pill"><span className="pill-label">{p.l}</span><span className="pill-value">{p.v}</span></div>)}
             </div>
           </div>
@@ -372,204 +324,136 @@ try{
 
         <main className="main">
           <div className="container">
-
-          {tab==="calc" && (
-            <div>
-              <div className="card" style={{marginBottom:16}}>
-                <div style={{fontSize:11,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:1,marginBottom:14}}>
-                  Ripartizione Maggiorazione
+            <div className="card" style={{marginBottom:16}}>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:1,marginBottom:14}}>
+                Ripartizione Maggiorazione
+              </div>
+              <div className="deduction-row">
+                <div className="deduction-col">
+                  <h4>Deduzione {al} ordinaria</h4>
+                  <div className="val" style={{color:'var(--text2)'}}>{fmt(R.dedOrd)}</div>
+                  <div className="sub">Risparmio {al}: {fmt(R.rispOrd)}</div>
                 </div>
-                <div className="deduction-row">
-                  <div className="deduction-col">
-                    <h4>Deduzione {al} ordinaria</h4>
-                    <div className="val" style={{color:'var(--text2)'}}>{fmt(R.dedOrd)}</div>
-                    <div className="sub">Risparmio {al}: {fmt(R.rispOrd)}</div>
-                  </div>
-                  <div className="deduction-op">+</div>
-                  <div className="deduction-col brand-col">
-                    <h4 style={{color:'var(--brand2)'}}>Maggiorazione Iperammortamento</h4>
-                    <div className="val">{fmt(R.dedIper)}</div>
-                    <div className="sub" style={{color:'var(--brand2)'}}>Bonus {al} Netto: {fmt(R.bonusN)}</div>
-                  </div>
-                  <div className="deduction-op">=</div>
-                  <div className="deduction-col deduction-total">
-                    <h4>Deduzione {al} Totale</h4>
-                    <div className="val" style={{color:'#fff'}}>{fmt(R.dedTot)}</div>
-                    <div className="sub">Risparmio {al} Totale: {fmt(R.rispTot)}</div>
-                  </div>
+                <div className="deduction-op">+</div>
+                <div className="deduction-col brand-col">
+                  <h4 style={{color:'var(--brand2)'}}>Maggiorazione Iperammortamento</h4>
+                  <div className="val">{fmt(R.dedIper)}</div>
+                  <div className="sub" style={{color:'var(--brand2)'}}>Bonus {al} Netto: {fmt(R.bonusN)}</div>
+                </div>
+                <div className="deduction-op">=</div>
+                <div className="deduction-col deduction-total">
+                  <h4>Deduzione {al} Totale</h4>
+                  <div className="val" style={{color:'#fff'}}>{fmt(R.dedTot)}</div>
+                  <div className="sub">Risparmio {al} Totale: {fmt(R.rispTot)}</div>
                 </div>
               </div>
+            </div>
 
-              <div className="kpi-row" style={{gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))'}}>
-                <div className="kpi kpi-green">
-                  <div className="kpi-label">💰 Bonus {al} Netto (Iper)</div>
-                  <div className="kpi-value">{fmt(R.bonusN)}</div>
-                  <div className="kpi-sub">{fmtP(R.pctIper)} dell'investimento netto</div>
-                </div>
-                {R.sabC>0 && (
-                  <div className="kpi kpi-dark">
-                    <div className="kpi-label">🏦 Sabatini</div>
-                    <div className="kpi-value" style={{color:'var(--green)'}}>{fmt(R.sabC)}</div>
-                  </div>
-                )}
-                {R.zesC>0 && (
-                  <div className="kpi kpi-dark">
-                    <div className="kpi-label">📍 ZES Unica</div>
-                    <div className="kpi-value" style={{color:'var(--accent)'}}>{fmt(R.zesC)}</div>
-                    <div className="kpi-sub" style={{color:'var(--text3)'}}>Base nettizzata: {fmt(R.impN)}</div>
-                  </div>
-                )}
-                <div className="kpi kpi-brand" style={{color:'#fff'}}>
-                  <div className="kpi-label">🎯 Vantaggio Complessivo</div>
-                  <div className="kpi-value">{fmt(R.vantTot)}</div>
-                  <div className="kpi-sub">{fmtP(R.pctTot)} del totale investito</div>
-                </div>
+            <div className="kpi-row" style={{gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))'}}>
+              <div className="kpi kpi-green">
+                <div className="kpi-label">💰 Bonus {al} Netto (Iper)</div>
+                <div className="kpi-value">{fmt(R.bonusN)}</div>
+                <div className="kpi-sub">{fmtP(R.pctIper)} dell'investimento netto</div>
               </div>
+              <div className="kpi kpi-brand" style={{color:'#fff'}}>
+                <div className="kpi-label">🎯 Vantaggio Complessivo</div>
+                <div className="kpi-value">{fmt(R.vantTot)}</div>
+                <div className="kpi-sub">{fmtP(R.pctTot)} del totale investito</div>
+              </div>
+            </div>
 
-              <div className="grid-2">
-                <div className="flex-col">
-                  <div className="card">
-                    <div className="card-title">⚙️ Parametri Investimento</div>
+            <div className="grid-2">
+              <div className="flex-col">
+                <div className="card">
+                  <div className="card-title">⚙️ Parametri Investimento</div>
 
+                  <div className="form-group">
+                    <label className="form-label">Importo Investimento (€)</label>
+                    <input type="number" className="form-input" value={inv} min={0} max={20000000} step={10000}
+                      onChange={e=>setInv(Math.max(0,Math.min(20000000,+e.target.value || 0)))}/>
+                    <input type="range" min={50000} max={5000000} step={50000} value={Math.min(inv,5000000)}
+                      onChange={e=>setInv(+e.target.value)}/>
+                    <div className="form-hint">Beni strumentali nuovi – Max €20M</div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Tipologia Investimento</label>
+                    <select className="form-select" value={tipo} onChange={e=>setTipo(e.target.value)}>
+                      <option value="ind40">Industria 4.0 e autoproduzione energia</option>
+                      <option value="eco">Transizione ecologica</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Coeff. Ammortamento Fiscale</label>
+                    <select className="form-select" value={alAmm} onChange={e=>setAlAmm(+e.target.value)}>
+                      {ALIQUOTE_AMM.map(a=><option key={a.value} value={a.value}>{a.label}</option>)}
+                    </select>
+                  </div>
+
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                     <div className="form-group">
-                      <label className="form-label">Importo Investimento (€)</label>
-                      <input type="number" className="form-input" value={inv} min={0} max={20000000} step={10000}
-                        onChange={e=>setInv(Math.max(0,Math.min(20000000,+e.target.value || 0)))}/>
-                      <input type="range" min={50000} max={5000000} step={50000} value={Math.min(inv,5000000)}
-                        onChange={e=>setInv(+e.target.value)}/>
-                      <div className="form-hint">Beni strumentali nuovi Allegato IV e V – Max €20M</div>
+                      <label className="form-label">Aliquota</label>
+                      <select className="form-select" value={alIres} onChange={e=>setAlIres(+e.target.value)}>
+                        <option value={0.24}>IRES 24%</option>
+                        <option value={0.23}>IRPEF 23%</option>
+                        <option value={0.25}>IRPEF 25%</option>
+                        <option value={0.35}>IRPEF 35%</option>
+                        <option value={0.43}>IRPEF 43%</option>
+                      </select>
                     </div>
+                    <div className="form-group">
+                      <label className="form-label">Anno Inizio</label>
+                      <select className="form-select" value={annoI} onChange={e=>setAnnoI(+e.target.value)}>
+                        <option value={2026}>2026</option>
+                        <option value={2027}>2027</option>
+                        <option value={2028}>2028</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style={{borderTop:'1px solid var(--border)',marginTop:4,paddingTop:16}}>
+                    <div className="card-title">🔗 Cumulo Incentivi</div>
 
                     <div className="form-group">
-                      <label className="form-label">Tipologia Investimento</label>
-                      <select className="form-select" value={tipo} onChange={e=>setTipo(e.target.value)}>
-                        <option value="ind40">Industria 4.0 e autoproduzione energia</option>
-                        <option value="eco">Transizione ecologica</option>
+                      <label className="form-label">Nuova Sabatini</label>
+                      <select className="form-select" value={sabR} onChange={e=>setSabR(+e.target.value)}>
+                        {SABATINI_OPTIONS.map(s=>(
+                          <option key={s.label} value={s.value}>
+                            {s.label}{s.value>0?` (${fmtP(s.value)})`:""}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Coeff. Ammortamento Fiscale</label>
-                      <select className="form-select" value={alAmm} onChange={e=>setAlAmm(+e.target.value)}>
-                        {ALIQUOTE_AMM.map(a=><option key={a.value} value={a.value}>{a.label}</option>)}
+                      <label className="form-label">ZES Unica Mezzogiorno</label>
+                      <select className="form-select" value={zesI} onChange={e=>setZesI(+e.target.value)}>
+                        {ZES_OPTIONS.map((z,i)=>(
+                          <option key={i} value={i}>
+                            {z.label}{z.value>0?` (${fmtPs(z.value)})`:""}
+                          </option>
+                        ))}
                       </select>
-                      <div className="form-hint">DM 31/12/1988 – Primo anno ridotto al 50%</div>
-                    </div>
-
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                      <div className="form-group">
-                        <label className="form-label">Aliquota</label>
-                        <select className="form-select" value={alIres} onChange={e=>setAlIres(+e.target.value)}>
-                          <option value={0.24}>IRES 24%</option>
-                          <option value={0.23}>IRPEF 23%</option>
-                          <option value={0.25}>IRPEF 25%</option>
-                          <option value={0.35}>IRPEF 35%</option>
-                          <option value={0.43}>IRPEF 43%</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label className="form-label">Anno Inizio</label>
-                        <select className="form-select" value={annoI} onChange={e=>setAnnoI(+e.target.value)}>
-                          <option value={2026}>2026</option>
-                          <option value={2027}>2027</option>
-                          <option value={2028}>2028</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div style={{borderTop:'1px solid var(--border)',marginTop:4,paddingTop:16}}>
-                      <div className="card-title">🔗 Cumulo Incentivi</div>
-
-                      <div className="form-group">
-                        <label className="form-label">Nuova Sabatini</label>
-                        <select className="form-select" value={sabR} onChange={e=>setSabR(+e.target.value)}>
-                          {SABATINI_OPTIONS.map(s=>(
-                            <option key={s.label} value={s.value}>
-                              {s.label}{s.value>0?` (${fmtP(s.value)})`:""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">ZES Unica Mezzogiorno</label>
-                        <select className="form-select" value={zesI} onChange={e=>setZesI(+e.target.value)}>
-                          {ZES_OPTIONS.map((z,i)=>(
-                            <option key={i} value={i}>
-                              {z.label}{z.value>0?` (${fmtPs(z.value)})`:""}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="form-hint">Il contributo ZES riduce la base dell'iperammortamento (nettizzazione)</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="card">
-                    <div className="card-title">✅ Requisiti Idoneità</div>
-                    {[
-                      "Soggetti titolari di reddito d'impresa residenti in Italia",
-                      "Rispetto normative sicurezza e DURC regolare",
-                      "Beni strumentali nuovi Allegati IV o V",
-                      "Interconnessione al sistema aziendale 4.0",
-                      "Perizia tecnica asseverata (>€300k) o autocertificazione",
-                      "Comunicazioni al GSE (preventiva, conferma, completamento)",
-                      "Certificazione contabile (revisore legale)"
-                    ].map((r,i)=><div key={i} className="check-item"><span className="check-icon">✓</span>{r}</div>)}
-                  </div>
-
-                  <div className="card">
-                    <div className="card-title">📊 Aliquote Scaglioni</div>
-                    {SCAGLIONI.map((s,i)=>{
-                      const rate=tipo==="eco"?s.indEco:s.ind40;
-                      return (
-                        <div key={i} className="scaglione-bar" style={{background:i===0?'var(--brand1)':i===1?'var(--brand2)':'var(--brand3)'}}>
-                          <div style={{flex:1,fontSize:12,opacity:.8}}>{s.label}</div>
-                          <div style={{textAlign:'right'}}>
-                            <div style={{fontSize:22,fontWeight:700,fontFamily:'var(--serif)'}}>{fmtPs(rate)}</div>
-                            <div style={{fontSize:10,opacity:.7}}>Risparmio {al}: {fmtP(rate*alIres)}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    <div className="callout callout-blue" style={{marginTop:12,fontSize:12}}>
-                      💡 Il risparmio è calcolato all'aliquota {al} del {fmtPs(alIres)}. La maggiorazione <strong>non interessa l'IRAP</strong>.
+                      <div className="form-hint">Il contributo ZES riduce la base dell'iperammortamento (nettizzazione)</div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex-col">
-                  {R.det.length>0 && (
-                    <div className="card">
-                      <div className="card-title">Dettaglio Maggiorazione per Scaglione</div>
-                      <table>
-                        <thead>
-                          <tr>
-                            {["Scaglione","Base","Aliquota","Maggiorazione","Risparmio "+al].map(h=><th key={h}>{h}</th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {R.det.map((d,i)=>(
-                            <tr key={i}>
-                              <td style={{fontWeight:600}}>{d.label}</td>
-                              <td>{fmt(d.fascia)}</td>
-                              <td>{fmtPs(d.rate)}</td>
-                              <td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(d.maggiorazione)}</td>
-                              <td style={{color:'var(--green)',fontWeight:600}}>{fmt(d.maggiorazione*alIres)}</td>
-                            </tr>
-                          ))}
-                          <tr className="total-row">
-                            <td style={{fontWeight:700}}>Totale</td>
-                            <td>{fmt(R.impN)}</td>
-                            <td></td>
-                            <td style={{color:'var(--brand2)'}}>{fmt(R.magg)}</td>
-                            <td style={{color:'var(--green)'}}>{fmt(R.bonusN)}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+              <div className="flex-col">
+                {/* ✅ GRAFICI: se Recharts non c'è, non esplode */}
+                {!HAS_RECHARTS && (
+                  <div className="card">
+                    <div className="card-title">📉 Grafici</div>
+                    <div className="callout callout-gold" style={{margin:0}}>
+                      Recharts non è disponibile su questo hosting/browser (CDN non caricato o bloccato).<br/>
+                      La simulazione e le tabelle funzionano comunque.
                     </div>
-                  )}
+                  </div>
+                )}
 
+                {HAS_RECHARTS && (
                   <div className="card">
                     <div className="card-title">Piano di Ammortamento – Grafico</div>
                     <ResponsiveContainer width="100%" height={280}>
@@ -585,108 +469,50 @@ try{
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
+                )}
 
-                  {cumD.length>1 && (
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
-                      <div className="card">
-                        <div className="card-title">Composizione Beneficio</div>
-                        <ResponsiveContainer width="100%" height={200}>
-                          <PieChart>
-                            <Pie data={cumD} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
-                              {cumD.map((d,i)=><Cell key={i} fill={d.color} />)}
-                            </Pie>
-                            <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10}} />
-                            <Legend wrapperStyle={{fontSize:11,color:'#9fa3b4'}} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-
-                      <div className="card">
-                        <div className="card-title">Vantaggio Iper Cumulato</div>
-                        <ResponsiveContainer width="100%" height={200}>
-                          <AreaChart data={cumL}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" />
-                            <XAxis dataKey="anno" tick={{fontSize:11,fill:'#9fa3b4'}} />
-                            <YAxis tick={{fontSize:11,fill:'#9fa3b4'}} tickFormatter={v=>(v/1000).toFixed(0)+"k"} />
-                            <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10}} />
-                            <Area type="monotone" dataKey="Cumulato" fill="#5b8ec922" stroke="#5b8ec9" strokeWidth={2} />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="card" style={{overflow:'auto'}}>
-                    <div className="card-title">Simulazione Piano Ammortamento (Fiscale)</div>
-                    <table>
-                      <thead>
-                        <tr>
-                          {["Anno","Aliq.","Amm. Civilistico","Iper-Amm. (Extra)","Tot. Deduzione","Risparmio "+al,"Bonus "+al,"%"]
-                            .map(h=><th key={h} style={{whiteSpace:'nowrap'}}>{h}</th>)}
+                <div className="card" style={{overflow:'auto'}}>
+                  <div className="card-title">Simulazione Piano Ammortamento (Fiscale)</div>
+                  <table>
+                    <thead>
+                      <tr>
+                        {["Anno","Aliq.","Amm. Civilistico","Iper-Amm. (Extra)","Tot. Deduzione","Risparmio "+al,"Bonus "+al,"%"]
+                          .map(h=><th key={h} style={{whiteSpace:'nowrap'}}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {aa.map((a,i)=>(
+                        <tr key={a.anno} style={{background:i%2?'rgba(255,255,255,0.01)':'transparent'}}>
+                          <td style={{fontWeight:600}}>{a.anno}</td>
+                          <td>{fmtP(a.aliquota)}</td>
+                          <td style={{color:'var(--text3)'}}>{fmt(a.ammCiv)}</td>
+                          <td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(a.iperEx)}</td>
+                          <td style={{fontWeight:600}}>{fmt(a.totDed)}</td>
+                          <td>{fmt(a.rispIres)}</td>
+                          <td style={{color:'var(--green)',fontWeight:600}}>{fmt(a.vantIper)}</td>
+                          <td style={{color:'var(--text3)'}}>{fmtP(a.pct)}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {aa.map((a,i)=>(
-                          <tr key={a.anno} style={{background:i%2?'rgba(255,255,255,0.01)':'transparent'}}>
-                            <td style={{fontWeight:600}}>{a.anno}</td>
-                            <td>{fmtP(a.aliquota)}</td>
-                            <td style={{color:'var(--text3)'}}>{fmt(a.ammCiv)}</td>
-                            <td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(a.iperEx)}</td>
-                            <td style={{fontWeight:600}}>{fmt(a.totDed)}</td>
-                            <td>{fmt(a.rispIres)}</td>
-                            <td style={{color:'var(--green)',fontWeight:600}}>{fmt(a.vantIper)}</td>
-                            <td style={{color:'var(--text3)'}}>{fmtP(a.pct)}</td>
-                          </tr>
-                        ))}
-                        <tr className="total-row">
-                          <td colSpan={2} style={{fontWeight:700}}>TOTALE</td>
-                          <td style={{color:'var(--text3)'}}>{fmt(R.tO)}</td>
-                          <td style={{color:'var(--brand2)'}}>{fmt(R.tM)}</td>
-                          <td>{fmt(R.tO+R.tM)}</td>
-                          <td>{fmt(R.rispTot)}</td>
-                          <td style={{color:'var(--green)'}}>{fmt(R.bonusN)}</td>
-                          <td>{fmtP(R.pctIper)}</td>
-                        </tr>
-                        {R.sabC>0 && (
-                          <tr style={{color:'var(--green)'}}>
-                            <td colSpan={6} style={{textAlign:'right',fontWeight:600}}>+ Contributo Sabatini</td>
-                            <td style={{fontWeight:700}}>{fmt(R.sabC)}</td>
-                            <td>{fmtP(R.sabC/inv)}</td>
-                          </tr>
-                        )}
-                        {R.zesC>0 && (
-                          <tr style={{color:'var(--accent)'}}>
-                            <td colSpan={6} style={{textAlign:'right',fontWeight:600}}>+ Contributo ZES Unica</td>
-                            <td style={{fontWeight:700}}>{fmt(R.zesC)}</td>
-                            <td>{fmtP(R.zesC/inv)}</td>
-                          </tr>
-                        )}
-                        <tr className="grand-total">
-                          <td colSpan={6} style={{textAlign:'right'}}>VANTAGGIO COMPLESSIVO</td>
-                          <td>{fmt(R.vantTot)}</td>
-                          <td>{fmtP(R.pctTot)}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
+                      ))}
+                      <tr className="total-row">
+                        <td colSpan={2} style={{fontWeight:700}}>TOTALE</td>
+                        <td style={{color:'var(--text3)'}}>{fmt(R.tO)}</td>
+                        <td style={{color:'var(--brand2)'}}>{fmt(R.tM)}</td>
+                        <td>{fmt(R.tO+R.tM)}</td>
+                        <td>{fmt(R.rispTot)}</td>
+                        <td style={{color:'var(--green)'}}>{fmt(R.bonusN)}</td>
+                        <td>{fmtP(R.pctIper)}</td>
+                      </tr>
+                      <tr className="grand-total">
+                        <td colSpan={6} style={{textAlign:'right'}}>VANTAGGIO COMPLESSIVO</td>
+                        <td>{fmt(R.vantTot)}</td>
+                        <td>{fmtP(R.pctTot)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
+
               </div>
             </div>
-          )}
-
-          {/* Le altre tab le lasciamo uguali alla tua: se vuoi le reinserisco 1:1 identiche */}
-          {tab!=="calc" && (
-            <div className="card">
-              <div className="card-title">ℹ️ Nota</div>
-              <p className="prose">
-                Per tenere il messaggio corto ti ho rimesso tutta la parte <strong>Simulatore</strong> (quella che ti dava errore)
-                e ho sistemato in modo definitivo Recharts su GitHub Pages.
-                <br/><br/>
-                Se vuoi, nel prossimo messaggio ti reinserisco anche le altre schede (Normativa/Cumulo/Procedura/News) identiche alle tue.
-              </p>
-            </div>
-          )}
 
           </div>
         </main>
@@ -694,8 +520,7 @@ try{
         <footer className="footer">
           <div className="container">
             <div className="footer-text">
-              <strong>INGENIA S.R.L.</strong> — Consulenza Industria 4.0, AI & Incentivi Fiscali<br/>
-              Simulatore Iperammortamento 2026 — L. n. 199/2025, commi 427–436<br/><br/>
+              <strong>INGENIA S.R.L.</strong> — Simulatore Iperammortamento 2026<br/>
               <em>A solo scopo illustrativo, non costituisce consulenza professionale, legale o fiscale.</em>
             </div>
           </div>
