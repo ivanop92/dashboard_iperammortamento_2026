@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulatore Iperammortamento 2026 | INGENIA S.R.L.</title>
 <meta name="description" content="Calcola il beneficio fiscale dell'Iperammortamento 2026 (L. 199/2025). Simulatore interattivo con piano ammortamento, cumulo ZES/Sabatini e guida normativa completa. A cura di INGENIA S.R.L.">
 
+<!-- Open Graph for LinkedIn -->
+<meta property="og:title" content="Simulatore Iperammortamento 2026 – Industria 4.0">
+<meta property="og:description" content="Calcola il tuo beneficio fiscale con il nuovo Iperammortamento 2026: fino al 180% di maggiorazione sugli investimenti 4.0. Simulatore gratuito a cura di INGENIA S.R.L.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<!-- React -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<!-- ✅ IMPORTANTISSIMO: PropTypes PRIMA di Recharts (evita 'oneOfType' undefined) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+
+<!-- Recharts (opzionale: se non carica NON deve bloccare la pagina) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
+
+<!-- Babel (JSX in pagina) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -32,16 +52,7 @@ a{color:var(--brand3);text-decoration:none}
 .container{max-width:1200px;margin:0 auto;padding:0 24px;position:relative}
 .header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .header-left{display:flex;align-items:center;gap:16px}
-
-.brandmark{
-  width:44px;height:44px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--grad2);
-  box-shadow:0 10px 26px rgba(0,0,0,.35);
-  flex-shrink:0;
-}
-.brandmark svg{width:28px;height:28px;opacity:.95}
-
+.logo-img{height:44px;opacity:0.95}
 .header-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
 .badge-green{background:#34d39918;color:#34d399;border:1px solid #34d39933}
 .badge-gold{background:#fbbf2418;color:#fbbf24;border:1px solid #fbbf2433}
@@ -57,7 +68,7 @@ a{color:var(--brand3);text-decoration:none}
 
 nav.tabs{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
 nav.tabs .container{display:flex;gap:4px;overflow-x:auto;padding-top:4px;padding-bottom:4px}
-.tab-btn{padding:10px 20px;border:none;cursor:pointer;background:transparent;color:var(--text3);border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
+.tab-btn{padding:10px 20px;border:none;cursor:pointer;background:transparent;color:var(--text3);border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;font-family:var(--font)}
 .tab-btn:hover{color:var(--text);background:var(--bg3)}
 .tab-btn.active{background:var(--grad);color:#fff}
 
@@ -103,78 +114,83 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .total-row td{font-weight:700;background:var(--bg3)}
 .grand-total td{background:var(--grad);color:#fff;font-weight:700;padding:12px 10px}
 
+.section-title{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);margin:32px 0 16px;display:flex;align-items:center;gap:10px}
+.prose{line-height:1.9;color:var(--text2);font-size:14.5px}
+.prose strong{color:var(--text);font-weight:600}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-yes{background:#34d39918;color:#34d399}
+.badge-no{background:#f8717118;color:#f87171}
+
 .callout{padding:16px 20px;border-radius:12px;margin:16px 0;font-size:14px;line-height:1.7}
+.callout-blue{background:#5b8ec918;border-left:4px solid var(--brand2);color:var(--brand2)}
+.callout-red{background:#f8717118;border-left:4px solid var(--red);color:var(--red)}
 .callout-gold{background:#fbbf2418;border-left:4px solid var(--accent);color:#f59e0b}
+.callout-brand{background:linear-gradient(135deg,#7c5cbf18,#3bbfa018);border-left:4px solid var(--brand3)}
+
+.timeline-step{display:flex;gap:20px;margin-bottom:28px;position:relative}
+.timeline-dot{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;font-family:var(--serif);color:#fff}
+.timeline-line{position:absolute;left:23px;top:52px;width:2px;height:calc(100% - 24px)}
+
+.check-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;line-height:1.5;color:var(--text2)}
+.check-icon{width:18px;height:18px;border-radius:5px;flex-shrink:0;background:#34d39918;border:1px solid #34d39933;display:flex;align-items:center;justify-content:center;font-size:10px;color:#34d399;margin-top:2px}
+.exclude-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f8717108;border-radius:10px;font-size:13px;color:#f87171;margin-bottom:6px}
+
+.scaglione-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:12px 16px;border-radius:12px;color:#fff}
+.news-card{display:flex;gap:14px;padding:16px 18px;background:var(--bg3);border-radius:12px;border:1px solid var(--border);margin-bottom:12px}
+.news-icon{font-size:24px;flex-shrink:0}
+.news-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.news-desc{font-size:13px;line-height:1.6;color:var(--text2)}
+
+.doc-card{background:var(--bg3);border-radius:14px;padding:18px 16px;border:1px solid var(--border)}
+.doc-card .icon{font-size:28px;margin-bottom:8px}
+.doc-card h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.doc-card p{font-size:12px;line-height:1.6;color:var(--text2)}
+
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
+.footer-logo{height:60px;margin-bottom:12px;opacity:0.8}
+.footer-text{font-size:12px;color:var(--text3);line-height:1.7}
 
 .grid-2{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:24px;align-items:start}
 .flex-col{display:flex;flex-direction:column;gap:20px}
-@media(max-width:900px){
-  .grid-2{grid-template-columns:1fr}
-  .deduction-row{grid-template-columns:1fr;gap:8px}
-  .deduction-op{display:none}
-  .hero h1{font-size:28px}
-}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}.deduction-row{grid-template-columns:1fr;gap:8px}.deduction-op{display:none}.hero h1{font-size:28px}}
 
-.footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
-.footer-text{font-size:12px;color:var(--text3);line-height:1.7}
-
-#error-box{
+#errbox{
   display:none;
+  max-width:1200px;
+  margin:16px auto 0;
   padding:14px 16px;
   border-radius:12px;
   border:1px solid rgba(248,113,113,.35);
   background:rgba(248,113,113,.12);
   color:#fecaca;
-  margin:16px auto;
-  max-width:1200px;
   font-size:13px;
 }
 </style>
 </head>
 
 <body>
-<div id="error-box"></div>
+<div id="errbox"></div>
 <div id="root"></div>
 
-<!-- React -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-
-<!-- Recharts (opzionale) + PropTypes (necessario se Recharts carica) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
-
-<!-- Babel (per JSX) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-
 <script type="text/babel">
-function showError(msg){
-  const box=document.getElementById("error-box");
-  box.style.display="block";
-  box.innerHTML="⚠️ Errore JavaScript:<br/><pre style='white-space:pre-wrap;margin-top:8px;color:#ffd1d1'>"+msg+"</pre>";
-}
+const showErr=(msg)=>{
+  const b=document.getElementById("errbox");
+  b.style.display="block";
+  b.innerHTML="⚠️ Errore JavaScript:<br/><pre style='white-space:pre-wrap;margin-top:8px;color:#ffd1d1'>"+msg+"</pre>";
+};
 
 try{
-  if(!window.React || !window.ReactDOM) throw new Error("React o ReactDOM non caricati (CDN bloccato?).");
-
   const {useState,useMemo}=React;
 
-  // ✅ RECHARTS È OPZIONALE
+  // ✅ Recharts opzionale: se manca NON rompiamo la pagina
   const HAS_RECHARTS = !!window.Recharts;
   let BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area;
   if(HAS_RECHARTS){
-    ({BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area} = window.Recharts);
+    ({BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer,PieChart,Pie,Cell,AreaChart,Area}=window.Recharts);
   }
 
-  const BrandMark = () => (
-    <div className="brandmark" title="INGENIA S.R.L.">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 2l8 4.5v11L12 22l-8-4.5v-11L12 2z" stroke="white" strokeWidth="1.6" opacity="0.9"/>
-        <path d="M8.2 12h7.6" stroke="white" strokeWidth="1.6" strokeLinecap="round" opacity="0.9"/>
-        <path d="M12 8.4v7.2" stroke="white" strokeWidth="1.6" strokeLinecap="round" opacity="0.9"/>
-      </svg>
-    </div>
-  );
+  const LOGO_SRC="data:image/png;base64,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";
 
   const SCAGLIONI=[
     {fino:2500000,ind40:1.80,indEco:2.20,label:"0 – 2,5M"},
@@ -236,26 +252,30 @@ try{
   function calcAmm(imp,alAmm,alIres,annoI,tipo,zesR,sabR){
     const zesC=imp*zesR, impN=imp-zesC;
     const {totale:magg,dettaglio:det}=calcMagg(impN,tipo);
-    const bonusN=magg*alIres, dedOrd=impN, dedIper=magg, dedTot=dedOrd+dedIper;
-    const rispOrd=dedOrd*alIres, rispTot=dedTot*alIres;
+    const bonusN=magg*alIres,dedOrd=impN,dedIper=magg,dedTot=dedOrd+dedIper;
+    const rispOrd=dedOrd*alIres,rispTot=dedTot*alIres;
 
     const anni=[];
     let rO=impN,rM=magg,tV=0,tO=0,tM=0;
     for(let i=0;i<20;i++){
-      const a=annoI+i, al=i===0?alAmm/2:alAmm;
-      const aO=Math.min(rO,impN*al), aM=Math.min(rM,magg*al);
-      const tD=aO+aM, vI=aM*alIres, rI=tD*alIres;
-      rO=Math.max(0,rO-aO); rM=Math.max(0,rM-aM);
-      tV+=vI; tO+=aO; tM+=aM;
+      const a=annoI+i,al=i===0?alAmm/2:alAmm;
+      const aO=Math.min(rO,impN*al),aM=Math.min(rM,magg*al);
+      const tD=aO+aM,vI=aM*alIres,rI=tD*alIres;
+      rO=Math.max(0,rO-aO);rM=Math.max(0,rM-aM);
+      tV+=vI;tO+=aO;tM+=aM;
       anni.push({anno:a,aliquota:al,ammCiv:aO,iperEx:aM,totDed:tD,rispIres:rI,vantIper:vI,pct:impN>0?vI/impN:0});
-      if(rO<.01 && rM<.01) break;
+      if(rO<.01&&rM<.01)break;
     }
-    const sabC=impN*sabR, vantTot=tV+sabC+zesC;
+    const sabC=impN*sabR,vantTot=tV+sabC+zesC;
     return{impN,magg,det,dedOrd,dedIper,dedTot,rispOrd,bonusN,rispTot,pctIper:impN>0?bonusN/impN:0,anni,tO,tM,sabC,zesC,vantTot,pctTot:imp>0?vantTot/imp:0};
   }
 
   const TABS=[
     {id:"calc",label:"Simulatore",icon:"⚡"},
+    {id:"info",label:"Normativa",icon:"📋"},
+    {id:"cumulo",label:"Cumulo",icon:"🔗"},
+    {id:"procedura",label:"Procedura",icon:"📝"},
+    {id:"news",label:"Novità 2026",icon:"📰"}
   ];
 
   function App(){
@@ -267,8 +287,8 @@ try{
     const[tipo,setTipo]=useState("ind40");
     const[sabR,setSabR]=useState(0.1009);
     const[zesI,setZesI]=useState(0);
-
     const zesR=ZES_OPTIONS[zesI].value;
+
     const R=useMemo(()=>calcAmm(inv,alAmm,alIres,annoI,tipo,zesR,sabR),[inv,alAmm,alIres,annoI,tipo,zesR,sabR]);
 
     const aa=R.anni.filter(a=>a.totDed>.01);
@@ -281,13 +301,24 @@ try{
       ["Bonus "+al]:Math.round(a.vantIper)
     }));
 
-    return (
+    const cumD=[
+      R.bonusN>0 && {name:"Iperammortamento",value:Math.round(R.bonusN),color:"#7c5cbf"},
+      R.sabC>0 && {name:"Sabatini",value:Math.round(R.sabC),color:"#3bbfa0"},
+      R.zesC>0 && {name:"ZES Unica",value:Math.round(R.zesC),color:"#fbbf24"}
+    ].filter(Boolean);
+
+    const cumL=aa.map((a,i)=>{
+      const p=R.anni.slice(0,i+1).reduce((s,x)=>s+x.vantIper,0);
+      return {anno:a.anno+"",Cumulato:Math.round(p)};
+    });
+
+    return(
       <div>
         <header className="header">
           <div className="container">
             <div className="header-inner">
               <div className="header-left">
-                <BrandMark/>
+                <img src={LOGO_SRC} alt="INGENIA" className="logo-img"/>
                 <div>
                   <div style={{fontSize:11,color:'var(--text3)',fontWeight:500}}>Powered by INGENIA S.R.L.</div>
                   <div style={{fontSize:13,color:'var(--text2)'}}>Consulenza Industria 4.0 & AI</div>
@@ -304,10 +335,11 @@ try{
         <section className="hero">
           <div className="container">
             <h1>Iperammortamento 2026</h1>
-            <p>Simulatore interattivo per il calcolo del beneficio fiscale – Legge n. 199/2025, commi 427–436.</p>
+            <p>Simulatore interattivo per il calcolo del beneficio fiscale – Legge n. 199/2025, commi 427–436. Beni Industria 4.0, Transizione Ecologica e Autoproduzione FER.</p>
             <div className="hero-pills">
-              {[{l:"Orizzonte",v:"01.01.26 – 30.09.28"},{l:"Max",v:tipo==="eco"?"220%":"180%"},{l:"Investimento",v:"€ 20M"}]
-                .map((p,i)=><div key={i} className="pill"><span className="pill-label">{p.l}</span><span className="pill-value">{p.v}</span></div>)}
+              {[{l:"Orizzonte",v:"01.01.26 – 30.09.28"},{l:"Max",v:tipo==="eco"?"220%":"180%"},{l:"Beneficiari",v:"Reddito d'Impresa"},{l:"Investimento",v:"€ 20M"}].map((p,i)=>
+                <div key={i} className="pill"><span className="pill-label">{p.l}</span><span className="pill-value">{p.v}</span></div>
+              )}
             </div>
           </div>
         </section>
@@ -322,12 +354,12 @@ try{
           </div>
         </nav>
 
-        <main className="main">
-          <div className="container">
+        <main className="main"><div className="container">
+
+          {/* SIMULATORE */}
+          {tab==="calc" && <div>
             <div className="card" style={{marginBottom:16}}>
-              <div style={{fontSize:11,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:1,marginBottom:14}}>
-                Ripartizione Maggiorazione
-              </div>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:1,marginBottom:14}}>Ripartizione Maggiorazione</div>
               <div className="deduction-row">
                 <div className="deduction-col">
                   <h4>Deduzione {al} ordinaria</h4>
@@ -350,16 +382,10 @@ try{
             </div>
 
             <div className="kpi-row" style={{gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))'}}>
-              <div className="kpi kpi-green">
-                <div className="kpi-label">💰 Bonus {al} Netto (Iper)</div>
-                <div className="kpi-value">{fmt(R.bonusN)}</div>
-                <div className="kpi-sub">{fmtP(R.pctIper)} dell'investimento netto</div>
-              </div>
-              <div className="kpi kpi-brand" style={{color:'#fff'}}>
-                <div className="kpi-label">🎯 Vantaggio Complessivo</div>
-                <div className="kpi-value">{fmt(R.vantTot)}</div>
-                <div className="kpi-sub">{fmtP(R.pctTot)} del totale investito</div>
-              </div>
+              <div className="kpi kpi-green"><div className="kpi-label">💰 Bonus {al} Netto (Iper)</div><div className="kpi-value">{fmt(R.bonusN)}</div><div className="kpi-sub">{fmtP(R.pctIper)} dell'investimento netto</div></div>
+              {R.sabC>0 && <div className="kpi kpi-dark"><div className="kpi-label">🏦 Sabatini</div><div className="kpi-value" style={{color:'var(--green)'}}>{fmt(R.sabC)}</div></div>}
+              {R.zesC>0 && <div className="kpi kpi-dark"><div className="kpi-label">📍 ZES Unica</div><div className="kpi-value" style={{color:'var(--accent)'}}>{fmt(R.zesC)}</div><div className="kpi-sub" style={{color:'var(--text3)'}}>Base nettizzata: {fmt(R.impN)}</div></div>}
+              <div className="kpi kpi-brand" style={{color:'#fff'}}><div className="kpi-label">🎯 Vantaggio Complessivo</div><div className="kpi-value">{fmt(R.vantTot)}</div><div className="kpi-sub">{fmtP(R.pctTot)} del totale investito</div></div>
             </div>
 
             <div className="grid-2">
@@ -370,10 +396,9 @@ try{
                   <div className="form-group">
                     <label className="form-label">Importo Investimento (€)</label>
                     <input type="number" className="form-input" value={inv} min={0} max={20000000} step={10000}
-                      onChange={e=>setInv(Math.max(0,Math.min(20000000,+e.target.value || 0)))}/>
-                    <input type="range" min={50000} max={5000000} step={50000} value={Math.min(inv,5000000)}
-                      onChange={e=>setInv(+e.target.value)}/>
-                    <div className="form-hint">Beni strumentali nuovi – Max €20M</div>
+                      onChange={e=>setInv(Math.max(0,Math.min(20000000, +e.target.value || 0)))}/>
+                    <input type="range" min={50000} max={5000000} step={50000} value={Math.min(inv,5000000)} onChange={e=>setInv(+e.target.value)}/>
+                    <div className="form-hint">Beni strumentali nuovi Allegato IV e V – Max €20M</div>
                   </div>
 
                   <div className="form-group">
@@ -389,25 +414,20 @@ try{
                     <select className="form-select" value={alAmm} onChange={e=>setAlAmm(+e.target.value)}>
                       {ALIQUOTE_AMM.map(a=><option key={a.value} value={a.value}>{a.label}</option>)}
                     </select>
+                    <div className="form-hint">DM 31/12/1988 – Primo anno ridotto al 50%</div>
                   </div>
 
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                     <div className="form-group">
                       <label className="form-label">Aliquota</label>
                       <select className="form-select" value={alIres} onChange={e=>setAlIres(+e.target.value)}>
-                        <option value={0.24}>IRES 24%</option>
-                        <option value={0.23}>IRPEF 23%</option>
-                        <option value={0.25}>IRPEF 25%</option>
-                        <option value={0.35}>IRPEF 35%</option>
-                        <option value={0.43}>IRPEF 43%</option>
+                        <option value={0.24}>IRES 24%</option><option value={0.23}>IRPEF 23%</option><option value={0.25}>IRPEF 25%</option><option value={0.35}>IRPEF 35%</option><option value={0.43}>IRPEF 43%</option>
                       </select>
                     </div>
                     <div className="form-group">
                       <label className="form-label">Anno Inizio</label>
                       <select className="form-select" value={annoI} onChange={e=>setAnnoI(+e.target.value)}>
-                        <option value={2026}>2026</option>
-                        <option value={2027}>2027</option>
-                        <option value={2028}>2028</option>
+                        <option value={2026}>2026</option><option value={2027}>2027</option><option value={2028}>2028</option>
                       </select>
                     </div>
                   </div>
@@ -418,37 +438,59 @@ try{
                     <div className="form-group">
                       <label className="form-label">Nuova Sabatini</label>
                       <select className="form-select" value={sabR} onChange={e=>setSabR(+e.target.value)}>
-                        {SABATINI_OPTIONS.map(s=>(
-                          <option key={s.label} value={s.value}>
-                            {s.label}{s.value>0?` (${fmtP(s.value)})`:""}
-                          </option>
-                        ))}
+                        {SABATINI_OPTIONS.map(s=><option key={s.label} value={s.value}>{s.label}{s.value>0?` (${fmtP(s.value)})`:""}</option>)}
                       </select>
                     </div>
 
                     <div className="form-group">
                       <label className="form-label">ZES Unica Mezzogiorno</label>
                       <select className="form-select" value={zesI} onChange={e=>setZesI(+e.target.value)}>
-                        {ZES_OPTIONS.map((z,i)=>(
-                          <option key={i} value={i}>
-                            {z.label}{z.value>0?` (${fmtPs(z.value)})`:""}
-                          </option>
-                        ))}
+                        {ZES_OPTIONS.map((z,i)=><option key={i} value={i}>{z.label}{z.value>0?` (${fmtPs(z.value)})`:""}</option>)}
                       </select>
                       <div className="form-hint">Il contributo ZES riduce la base dell'iperammortamento (nettizzazione)</div>
                     </div>
                   </div>
                 </div>
+
+                <div className="card">
+                  <div className="card-title">✅ Requisiti Idoneità</div>
+                  {["Soggetti titolari di reddito d'impresa residenti in Italia","Rispetto normative sicurezza e DURC regolare","Beni strumentali nuovi Allegati IV o V","Beni prodotti in UE/SEE (clausola in via di eliminazione)","Interconnessione al sistema aziendale 4.0","Perizia tecnica asseverata (>€300k) o autocertificazione","Comunicazioni al GSE (preventiva, conferma, completamento)","Certificazione contabile (revisore legale)"].map((r,i)=>
+                    <div key={i} className="check-item"><span className="check-icon">✓</span>{r}</div>
+                  )}
+                </div>
+
+                <div className="card">
+                  <div className="card-title">📊 Aliquote Scaglioni</div>
+                  {SCAGLIONI.map((s,i)=>{const rate=tipo==="eco"?s.indEco:s.ind40;return(
+                    <div key={i} className="scaglione-bar" style={{background:i===0?'var(--brand1)':i===1?'var(--brand2)':'var(--brand3)'}}>
+                      <div style={{flex:1,fontSize:12,opacity:.8}}>{s.label}</div>
+                      <div style={{textAlign:'right'}}><div style={{fontSize:22,fontWeight:700,fontFamily:'var(--serif)'}}>{fmtPs(rate)}</div><div style={{fontSize:10,opacity:.7}}>Risparmio {al}: {fmtP(rate*alIres)}</div></div>
+                    </div>
+                  )})}
+                  <div className="callout callout-blue" style={{marginTop:12,fontSize:12}}>
+                    💡 Il risparmio è calcolato all'aliquota {al} del {fmtPs(alIres)}. La maggiorazione <strong>non interessa l'IRAP</strong>.
+                  </div>
+                </div>
               </div>
 
               <div className="flex-col">
-                {/* ✅ GRAFICI: se Recharts non c'è, non esplode */}
+                {R.det.length>0 && <div className="card">
+                  <div className="card-title">Dettaglio Maggiorazione per Scaglione</div>
+                  <table><thead><tr>{["Scaglione","Base","Aliquota","Maggiorazione","Risparmio "+al].map(h=><th key={h}>{h}</th>)}</tr></thead>
+                    <tbody>
+                      {R.det.map((d,i)=><tr key={i}><td style={{fontWeight:600,textAlign:'left'}}>{d.label}</td><td>{fmt(d.fascia)}</td><td>{fmtPs(d.rate)}</td><td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(d.maggiorazione)}</td><td style={{color:'var(--green)',fontWeight:600}}>{fmt(d.maggiorazione*alIres)}</td></tr>)}
+                      <tr className="total-row"><td style={{fontWeight:700,textAlign:'left'}}>Totale</td><td>{fmt(R.impN)}</td><td></td><td style={{color:'var(--brand2)'}}>{fmt(R.magg)}</td><td style={{color:'var(--green)'}}>{fmt(R.bonusN)}</td></tr>
+                    </tbody>
+                  </table>
+                </div>}
+
+                {/* ✅ GRAFICI: se Recharts non c'è -> non crasha */}
                 {!HAS_RECHARTS && (
                   <div className="card">
                     <div className="card-title">📉 Grafici</div>
                     <div className="callout callout-gold" style={{margin:0}}>
-                      Recharts non è disponibile su questo hosting/browser (CDN non caricato o bloccato).<br/>
-                      La simulazione e le tabelle funzionano comunque.
+                      Recharts non è disponibile (CDN non caricato o bloccato).<br/>
+                      Il simulatore e tutte le tabelle restano funzionanti.
                     </div>
                   </div>
                 )}
@@ -458,41 +500,63 @@ try{
                     <div className="card-title">Piano di Ammortamento – Grafico</div>
                     <ResponsiveContainer width="100%" height={280}>
                       <BarChart data={chartD} barCategoryGap="20%">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" />
-                        <XAxis dataKey="anno" tick={{fontSize:11,fill:'#9fa3b4'}} />
-                        <YAxis tick={{fontSize:11,fill:'#9fa3b4'}} tickFormatter={v=>(v/1000).toFixed(0)+"k"} />
-                        <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10,fontSize:13,color:'#e8eaf0'}} itemStyle={{color:'#e8eaf0'}} />
-                        <Legend wrapperStyle={{fontSize:12,color:'#9fa3b4'}} />
-                        <Bar dataKey="Amm. Civilistico" fill="#4a4e63" radius={[4,4,0,0]} />
-                        <Bar dataKey="Iper-Amm. (Extra)" fill="#5b8ec9" radius={[4,4,0,0]} />
-                        <Bar dataKey={"Bonus "+al} fill="#34d399" radius={[4,4,0,0]} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08"/>
+                        <XAxis dataKey="anno" tick={{fontSize:11,fill:'#9fa3b4'}}/>
+                        <YAxis tick={{fontSize:11,fill:'#9fa3b4'}} tickFormatter={v=>(v/1000).toFixed(0)+"k"}/>
+                        <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10,fontSize:13,color:'#e8eaf0'}} itemStyle={{color:'#e8eaf0'}}/>
+                        <Legend wrapperStyle={{fontSize:12,color:'#9fa3b4'}}/>
+                        <Bar dataKey="Amm. Civilistico" fill="#4a4e63" radius={[4,4,0,0]}/>
+                        <Bar dataKey="Iper-Amm. (Extra)" fill="#5b8ec9" radius={[4,4,0,0]}/>
+                        <Bar dataKey={"Bonus "+al} fill="#34d399" radius={[4,4,0,0]}/>
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                 )}
 
+                {HAS_RECHARTS && cumD.length>1 && (
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20}}>
+                    <div className="card">
+                      <div className="card-title">Composizione Beneficio</div>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <PieChart>
+                          <Pie data={cumD} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
+                            {cumD.map((d,i)=><Cell key={i} fill={d.color}/>)}
+                          </Pie>
+                          <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10}}/>
+                          <Legend wrapperStyle={{fontSize:11,color:'#9fa3b4'}}/>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="card">
+                      <div className="card-title">Vantaggio Iper Cumulato</div>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <AreaChart data={cumL}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08"/>
+                          <XAxis dataKey="anno" tick={{fontSize:11,fill:'#9fa3b4'}}/>
+                          <YAxis tick={{fontSize:11,fill:'#9fa3b4'}} tickFormatter={v=>(v/1000).toFixed(0)+"k"}/>
+                          <Tooltip formatter={v=>fmt(v)} contentStyle={{background:'#1a1d2b',border:'1px solid #333',borderRadius:10}}/>
+                          <Area type="monotone" dataKey="Cumulato" fill="#5b8ec922" stroke="#5b8ec9" strokeWidth={2}/>
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
                 <div className="card" style={{overflow:'auto'}}>
                   <div className="card-title">Simulazione Piano Ammortamento (Fiscale)</div>
-                  <table>
-                    <thead>
-                      <tr>
-                        {["Anno","Aliq.","Amm. Civilistico","Iper-Amm. (Extra)","Tot. Deduzione","Risparmio "+al,"Bonus "+al,"%"]
-                          .map(h=><th key={h} style={{whiteSpace:'nowrap'}}>{h}</th>)}
-                      </tr>
-                    </thead>
+                  <table><thead><tr>{["Anno","Aliq.","Amm. Civilistico","Iper-Amm. (Extra)","Tot. Deduzione","Risparmio "+al,"Bonus "+al,"%"].map(h=><th key={h} style={{whiteSpace:'nowrap'}}>{h}</th>)}</tr></thead>
                     <tbody>
-                      {aa.map((a,i)=>(
-                        <tr key={a.anno} style={{background:i%2?'rgba(255,255,255,0.01)':'transparent'}}>
-                          <td style={{fontWeight:600}}>{a.anno}</td>
-                          <td>{fmtP(a.aliquota)}</td>
-                          <td style={{color:'var(--text3)'}}>{fmt(a.ammCiv)}</td>
-                          <td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(a.iperEx)}</td>
-                          <td style={{fontWeight:600}}>{fmt(a.totDed)}</td>
-                          <td>{fmt(a.rispIres)}</td>
-                          <td style={{color:'var(--green)',fontWeight:600}}>{fmt(a.vantIper)}</td>
-                          <td style={{color:'var(--text3)'}}>{fmtP(a.pct)}</td>
-                        </tr>
-                      ))}
+                      {aa.map((a,i)=><tr key={a.anno} style={{background:i%2?'rgba(255,255,255,0.01)':'transparent'}}>
+                        <td style={{fontWeight:600}}>{a.anno}</td><td>{fmtP(a.aliquota)}</td>
+                        <td style={{color:'var(--text3)'}}>{fmt(a.ammCiv)}</td>
+                        <td style={{color:'var(--brand2)',fontWeight:600}}>{fmt(a.iperEx)}</td>
+                        <td style={{fontWeight:600}}>{fmt(a.totDed)}</td>
+                        <td>{fmt(a.rispIres)}</td>
+                        <td style={{color:'var(--green)',fontWeight:600}}>{fmt(a.vantIper)}</td>
+                        <td style={{color:'var(--text3)'}}>{fmtP(a.pct)}</td>
+                      </tr>)}
+
                       <tr className="total-row">
                         <td colSpan={2} style={{fontWeight:700}}>TOTALE</td>
                         <td style={{color:'var(--text3)'}}>{fmt(R.tO)}</td>
@@ -502,27 +566,160 @@ try{
                         <td style={{color:'var(--green)'}}>{fmt(R.bonusN)}</td>
                         <td>{fmtP(R.pctIper)}</td>
                       </tr>
-                      <tr className="grand-total">
-                        <td colSpan={6} style={{textAlign:'right'}}>VANTAGGIO COMPLESSIVO</td>
-                        <td>{fmt(R.vantTot)}</td>
-                        <td>{fmtP(R.pctTot)}</td>
-                      </tr>
+
+                      {R.sabC>0 && <tr style={{color:'var(--green)'}}><td colSpan={6} style={{textAlign:'right',fontWeight:600}}>+ Contributo Sabatini</td><td style={{fontWeight:700}}>{fmt(R.sabC)}</td><td>{fmtP(R.sabC/inv)}</td></tr>}
+                      {R.zesC>0 && <tr style={{color:'var(--accent)'}}><td colSpan={6} style={{textAlign:'right',fontWeight:600}}>+ Contributo ZES Unica</td><td style={{fontWeight:700}}>{fmt(R.zesC)}</td><td>{fmtP(R.zesC/inv)}</td></tr>}
+                      <tr className="grand-total"><td colSpan={6} style={{textAlign:'right'}}>VANTAGGIO COMPLESSIVO</td><td>{fmt(R.vantTot)}</td><td>{fmtP(R.pctTot)}</td></tr>
                     </tbody>
                   </table>
                 </div>
 
               </div>
             </div>
+          </div>}
 
-          </div>
-        </main>
+          {/* NORMATIVA */}
+          {tab==="info" && <div style={{maxWidth:820}}>
+            <div className="card">
+              <h2 className="section-title">📜 Legge di Bilancio 2026 – Iperammortamento</h2>
+              <p className="prose">I commi 427–436 della <strong>Legge n. 199/2025</strong> reintroducono l'iperammortamento per investimenti con caratteristiche <strong>Industria 4.0</strong>, effettuati tra il <strong>1° gennaio 2026</strong> e il <strong>30 settembre 2028</strong>. L'incentivo consiste in una maggiorazione del costo su cui calcolare le quote di ammortamento e i canoni di locazione finanziaria, deducibili ai fini IRES o IRPEF mediante variazione in diminuzione. <strong>Non interessa la base imponibile IRAP</strong>.</p>
+
+              <h2 className="section-title">🏭 Soggetti Beneficiari</h2>
+              <p className="prose">Imprese di ogni tipo e dimensione (soggetti IRPEF e IRES), incluse stabili organizzazioni estere in Italia. Escluse: imprese in liquidazione, fallimento, concordato preventivo senza continuità (D.Lgs. 14/2019), destinatarie di sanzioni interdittive (D.Lgs. 231/2001). Obbligatorio rispetto sicurezza lavoro e regolarità contributiva.</p>
+
+              <h2 className="section-title">⚙️ Beni Agevolabili (comma 429)</h2>
+              <p className="prose"><strong>a)</strong> Beni materiali e immateriali nuovi degli <strong>Allegati IV</strong> e <strong>V</strong>, interconnessi al sistema aziendale. <strong>b)</strong> Beni per <strong>autoproduzione energia rinnovabile</strong> per autoconsumo (art. 30 D.Lgs. 199/2021), inclusi impianti stoccaggio.</p>
+
+              <div className="callout callout-brand">
+                <strong>🤖 Novità Allegati 2026:</strong> AI generativa e LLM • Agentic AI • MLOps • Process Mining • Digital Twin • DPP • ESG/Carbon Footprint • Data Spaces interoperabili • low-code/no-code • 5G private • HPC per AI • cybersecurity OT/IT.
+              </div>
+
+              <h2 className="section-title">🚫 Beni Esclusi</h2>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+                {["PC, notebook, tablet","Stampanti, scanner, periferiche ufficio","Apparati di rete SOHO","Archiviazione uso personale","Beni per attività amministrative/contabili non connesse a processi operativi","Autovetture e autocarri stradali"].map((b,i)=>
+                  <div key={i} className="exclude-item">❌ {b}</div>
+                )}
+              </div>
+
+              <h2 className="section-title">📊 Scaglioni di Maggiorazione</h2>
+              <table style={{margin:'16px 0'}}>
+                <thead><tr style={{background:'var(--bg3)'}}><th style={{textAlign:'left'}}>Scaglione</th><th>Ind. 4.0</th><th>Risp. IRES</th><th>Trans. Ecologica</th><th>Risp. IRES</th></tr></thead>
+                <tbody>{SCAGLIONI.map((s,i)=>
+                  <tr key={i}><td style={{textAlign:'left',fontWeight:600}}>€ {s.label}</td><td style={{color:'var(--brand2)',fontWeight:700}}>{fmtPs(s.ind40)}</td><td style={{color:'var(--green)'}}>{fmtP(s.ind40*0.24)}</td><td style={{color:'var(--brand2)',fontWeight:700}}>{fmtPs(s.indEco)}</td><td style={{color:'var(--green)'}}>{fmtP(s.indEco*0.24)}</td></tr>
+                )}</tbody>
+              </table>
+
+              <h2 className="section-title">⏱️ Arco Temporale e Acconto</h2>
+              <p className="prose">Investimenti dal 1/1/2026 al 30/9/2028. Primo anno al 50%. <strong>Comma 434:</strong> l'acconto per il 2026 è determinato senza tener conto dell'iperammortamento.</p>
+
+              <h2 className="section-title">🔒 Perizia e Decadenza</h2>
+              <p className="prose">Oltre €300.000: perizia asseverata obbligatoria. Sotto: autocertificazione. Documentazione conservata <strong>10 anni</strong>.</p>
+            </div>
+          </div>}
+
+          {/* CUMULO */}
+          {tab==="cumulo" && <div style={{maxWidth:820}}>
+            <div className="card">
+              <h2 className="section-title">🔗 Cumulabilità (comma 431)</h2>
+              <p className="prose">Cumulabile con agevolazioni nazionali ed europee sui medesimi costi, purché il sostegno non copra le medesime quote di costo e non superi il costo sostenuto. <strong>Base al netto</strong> delle altre sovvenzioni (nettizzazione).</p>
+
+              <div className="callout callout-red"><strong>Divieto:</strong> NON spetta per investimenti che beneficiano dei crediti d'imposta 4.0.</div>
+
+              <h2 className="section-title">📐 Schema Riepilogativo</h2>
+              <table style={{margin:'16px 0'}}>
+                <thead><tr style={{background:'var(--bg3)'}}><th style={{textAlign:'left'}}>Agevolazione</th><th>Cumulabile?</th><th>Nettizzazione?</th><th style={{textAlign:'left'}}>Note</th></tr></thead>
+                <tbody>{[
+                  {n:"ZES Unica",ok:true,net:"Sì",note:"Riduce base iper"},
+                  {n:"Nuova Sabatini",ok:true,net:"No",note:"Contributo in c/interessi"},
+                  {n:"Crediti 4.0",ok:false,net:"—",note:"Divieto"},
+                  {n:"Transizione 5.0",ok:false,net:"—",note:"Non cumulabile sugli stessi beni"},
+                ].map((r,i)=>
+                  <tr key={i}>
+                    <td style={{textAlign:'left',fontWeight:600}}>{r.n}</td>
+                    <td><span className={"badge "+(r.ok?"badge-yes":"badge-no")}>{r.ok?"✓ Sì":"✗ No"}</span></td>
+                    <td style={{color:'var(--text3)'}}>{r.net}</td>
+                    <td style={{textAlign:'left',color:'var(--text3)',fontSize:12}}>{r.note}</td>
+                  </tr>
+                )}</tbody>
+              </table>
+            </div>
+          </div>}
+
+          {/* PROCEDURA */}
+          {tab==="procedura" && <div style={{maxWidth:820}}>
+            <div className="card">
+              <h2 className="section-title">📝 Procedura (GSE)</h2>
+              <p className="prose">L'agevolazione <strong>non è automatica</strong>. Comunicazioni tramite piattaforma telematica del GSE.</p>
+
+              <div style={{margin:'24px 0'}}>
+                {[
+                  {s:"I",t:"Comunicazione Preventiva",d:"Tipologia e importo investimenti.",c:"var(--brand1)",i:"📤"},
+                  {s:"II",t:"Conferma con Acconto ≥ 20%",d:"Entro 60 giorni dall'esito positivo.",c:"var(--brand2)",i:"💳"},
+                  {s:"III",t:"Completamento",d:"A investimenti effettuati.",c:"var(--brand3)",i:"✅"},
+                ].map((s,i)=>
+                  <div key={i} className="timeline-step">
+                    <div className="timeline-dot" style={{background:s.c,boxShadow:'0 4px 16px '+s.c+'44'}}>{s.s}</div>
+                    {i<2 && <div className="timeline-line" style={{background:'linear-gradient('+s.c+',transparent)'}}/>}
+                    <div style={{paddingTop:4}}>
+                      <div style={{fontSize:16,fontWeight:700,marginBottom:6}}>{s.i} {s.t}</div>
+                      <p style={{color:'var(--text2)',fontSize:14}}>{s.d}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <h2 className="section-title">📂 Documentazione</h2>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:14}}>
+                {[
+                  {t:"Perizia Tecnica",d:"Conformità e interconnessione.",i:"🔧"},
+                  {t:"Origine UE/SEE",d:"Dichiarazione produttore / CCIAA.",i:"🌍"},
+                  {t:"Certificazione Contabile",d:"A cura del revisore legale.",i:"📊"},
+                ].map((d,i)=>
+                  <div key={i} className="doc-card"><div className="icon">{d.i}</div><h4>{d.t}</h4><p>{d.d}</p></div>
+                )}
+              </div>
+
+              <div className="callout callout-gold" style={{marginTop:20}}>
+                <strong>⚡ Nota:</strong> se vedi “schermo nero”, è quasi sempre un errore JS in console (CDN bloccato o libreria non caricata).
+              </div>
+            </div>
+          </div>}
+
+          {/* NEWS */}
+          {tab==="news" && <div style={{maxWidth:820}}>
+            <div className="card">
+              <h2 className="section-title">📰 Novità – Telefisco 2026</h2>
+              <div style={{margin:'20px 0',padding:24,borderRadius:14,background:'linear-gradient(135deg,#fbbf2415,#f59e0b15)',border:'1px solid #fbbf2433'}}>
+                <div style={{fontSize:18,fontWeight:700,color:'var(--accent)',marginBottom:8,fontFamily:'var(--serif)'}}>🔥 Salta la clausola "Made in UE"</div>
+                <p style={{color:'#f59e0b',lineHeight:1.7,fontSize:14}}>Annuncio su eliminazione limitazioni territoriali.</p>
+              </div>
+
+              <h2 className="section-title">📋 Punti Chiave</h2>
+              {[
+                {i:"📐",t:"Scaglioni annuali o per periodo?",d:"Serve conferma ufficiale."},
+                {i:"🔄",t:"Dai crediti 4.0 all'iperammortamento",d:"Non spetta per beni con crediti 4.0."},
+                {i:"📄",t:"Nettizzazione dei contributi",d:"I contributi riducono la base dell'iper."},
+                {i:"🏦",t:"Leasing finanziario",d:"Deduzione nel periodo del contratto."},
+              ].map((x,i)=>
+                <div key={i} className="news-card">
+                  <div className="news-icon">{x.i}</div>
+                  <div>
+                    <div className="news-title">{x.t}</div>
+                    <div className="news-desc">{x.d}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>}
+
+        </div></main>
 
         <footer className="footer">
-          <div className="container">
-            <div className="footer-text">
-              <strong>INGENIA S.R.L.</strong> — Simulatore Iperammortamento 2026<br/>
-              <em>A solo scopo illustrativo, non costituisce consulenza professionale, legale o fiscale.</em>
-            </div>
+          <img src={LOGO_SRC} alt="INGENIA S.R.L." className="footer-logo"/>
+          <div className="footer-text">
+            <strong>INGENIA S.R.L.</strong> — Consulenza Industria 4.0, AI & Incentivi Fiscali<br/>
+            Simulatore Iperammortamento 2026 — L. n. 199/2025<br/><br/>
+            <em>A solo scopo illustrativo, non costituisce consulenza professionale, legale o fiscale.</em>
           </div>
         </footer>
       </div>
@@ -533,7 +730,7 @@ try{
 
 }catch(e){
   console.error(e);
-  showError(e && e.stack ? e.stack : String(e));
+  showErr(e && e.stack ? e.stack : String(e));
 }
 </script>
 </body>
